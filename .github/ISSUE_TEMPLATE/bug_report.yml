@@ -1,0 +1,73 @@
+name: Bug Report
+description: Something behaves incorrectly relative to a defined contract or acceptance criterion.
+title: "[bug][<service>] <short description>"
+labels: ["type:bug"]
+projects: ["fadyphil/1"]
+body:
+  - type: dropdown
+    id: service
+    attributes:
+      label: Service / Component
+      options:
+        - gateway
+        - auth
+        - scheduler
+        - registry
+        - worker
+        - tokenizer (rust)
+        - observability
+        - flutter
+        - nginx
+        - proto
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should happen, per the PRD/ARCHITECTURE contract or the acceptance criteria of the card that introduced this code.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction Steps
+      description: Exact steps, including load/concurrency conditions if this is a scheduler/batching bug — those are usually timing-dependent.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs / Trace Context
+      render: shell
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - "Correctness — wrong result, no crash"
+        - "Reliability — crash, hang, or resource leak"
+        - "Data integrity — dropped/duplicated/corrupted request"
+        - "Cosmetic — UI only, no functional impact"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: fix-requirements
+    attributes:
+      label: Fix Requirements (do not check until true)
+      options:
+        - label: A failing test reproducing this bug exists before any fix is written
+        - label: Root cause is understood, not just the symptom being patched

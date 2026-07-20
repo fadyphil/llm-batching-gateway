@@ -1,0 +1,83 @@
+name: Feature / Task Card
+description: A unit of work belonging to a milestone — the standard card type for planned build work.
+title: "[<service>] <short imperative description>"
+labels: ["type:feature"]
+# Replace with your actual GitHub Project — auto-adds every new card to the board
+# without a manual filing step. Format: "owner/project-number".
+projects: ["fadyphil/1"]
+body:
+  - type: dropdown
+    id: milestone
+    attributes:
+      label: Milestone
+      description: Which milestone does this card belong to? (Also set the Milestone field in the sidebar.)
+      options:
+        - M0 - Foundation
+        - M1 - Core Scheduler
+        - M-Tok - Rust Tokenizer Sidecar
+        - M-UI - Flutter Playground
+        - M2 - Tokenizer Integration
+        - M3 - Reliability & Observability
+        - M4 - Ops Dashboard & Comparison View
+        - M5 - Chaos & Load Testing
+        - M6 - Polish
+    validations:
+      required: true
+
+  - type: dropdown
+    id: service
+    attributes:
+      label: Service / Component
+      options:
+        - gateway
+        - auth
+        - scheduler
+        - registry
+        - worker
+        - tokenizer (rust)
+        - observability
+        - flutter
+        - nginx
+        - proto
+        - docs
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What needs to be built, and why — link back to the relevant PRD/ARCHITECTURE section if applicable.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Concrete, testable conditions for "done." This becomes the basis for the TDD test list.
+      placeholder: |
+        - [ ] Batch closes when max size is reached, before the window timer fires
+        - [ ] Batch closes on window expiry if max size was never reached
+        - [ ] No request added to a batch after it has been dispatched
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies / Blocked By
+      description: Other cards, services, or decisions this depends on. Link Issues directly (#123).
+
+  - type: dropdown
+    id: adr-needed
+    attributes:
+      label: Does this card involve an architecturally significant decision?
+      description: If yes, write the ADR before starting implementation — see CONTRIBUTING.md §7.
+      options:
+        - "No"
+        - "Yes — ADR will be written first"
+        - "Yes — ADR already exists (link it in Description)"
+    validations:
+      required: true

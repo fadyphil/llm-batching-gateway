@@ -5,6 +5,7 @@
 Full vision, motivation, and prior art comparison live in the original project overview. Condensed thesis: **the infrastructure is the project, not the model.** A capable-enough small model running behind a scheduler that demonstrates real dynamic batching, real backpressure, and real graceful degradation under failure is a stronger systems-engineering artifact than a bigger model behind a naive request-response wrapper.
 
 Goals, in order of what the project is actually trying to prove:
+
 1. A batching scheduler whose correctness properties are provable, not just plausible (property-based tests, not vibes)
 2. A polyglot service boundary (Go control plane ↔ Rust tokenizer) designed and versioned like a real distributed system, not a monolith with a library call
 3. Visible failure handling — a worker can die mid-batch and the system demonstrably recovers, on camera
@@ -13,7 +14,7 @@ Goals, in order of what the project is actually trying to prove:
 ## 2. MVP Scope (MoSCoW)
 
 | Tier | Item | Why |
-|---|---|---|
+| --- | --- | --- |
 | Must | M0 Foundation — proto, service skeletons, nginx, walking skeleton | Nothing exists without it |
 | Must | M1 Core Scheduler — batching, backpressure, multi-worker + session affinity | This is the thesis |
 | Must | M-Tok Rust Tokenizer sidecar (hand-rolled BPE) | Second independent proof of cross-language service design — promoted to Must, see `docs/adr/0002` and `0003` |
@@ -29,7 +30,7 @@ Goals, in order of what the project is actually trying to prove:
 ## 3. Functional Requirements
 
 | ID | Requirement | Acceptance Criteria |
-|---|---|---|
+| --- | --- | --- |
 | FR-1 | Gateway accepts client streaming completion requests | Client opens `Complete()`, receives `CompletionChunk`s in order |
 | FR-2 | Gateway validates a basic auth token before accepting a stream | Missing/invalid token → immediate `UNAUTHENTICATED`, no downstream dispatch |
 | FR-3 | Ingress applies backpressure via a bounded channel | Under saturation, new requests receive `RESOURCE_EXHAUSTED` immediately, never hang |
@@ -48,7 +49,7 @@ Full data shapes backing these requirements: `docs/SCHEMA.md`. Design rationale:
 ## 4. Non-Functional Requirements
 
 | Category | Target | Notes |
-|---|---|---|
+| --- | --- | --- |
 | Latency | Batch dispatch decision (enqueue → batch-close) within the configured window for interactive priority | Actual measured numbers, not aspirational ones, recorded in `docs/PERFORMANCE.md` once M5 produces data |
 | Throughput | Sustain N concurrent streams without request loss | N is hardware-bound (single RTX 3050, 4GB VRAM) — measure, don't assume; record in `docs/PERFORMANCE.md` |
 | Reliability | Zero silent request loss on worker crash | At-least-once semantics, `docs/adr/0004` |
@@ -86,7 +87,7 @@ Per-milestone exit criteria and card breakdown: `docs/milestones/` (written just
 ## 7. Open Risks
 
 | Risk | Mitigation |
-|---|---|
+| --- | --- |
 | Hardware ceiling (4GB VRAM) limits concurrent batch size enough that "batching under load" is hard to demonstrate convincingly | Choose a small enough quantized model that meaningful concurrency (≥4-8 simultaneous streams) fits; record the actual ceiling in `docs/PERFORMANCE.md` rather than assuming one upfront |
 | Solo bandwidth is a single point of failure against a fixed external timeline | Kanban WIP limit + milestone checkpoints (`docs/ROADMAP.md`) surface slippage early instead of at the end |
 | Scope creep re-expanding a cut "Could" item mid-build | MVP tiering in §2 is the enforcement mechanism — a Could item doesn't start until every Must item in its dependency chain is closed |

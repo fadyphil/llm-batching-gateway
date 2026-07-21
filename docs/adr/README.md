@@ -3,7 +3,7 @@
 Every architecturally significant decision in this project, in one place. Status meanings and the full lifecycle are defined in `CONTRIBUTING.md §7`. Add a row here in the same PR that adds or supersedes an ADR — this file is the source of truth for "what did we decide and why," not something reconstructed by reading every file in the folder.
 
 | # | Title | Status | Milestone |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | [0001](0001-session-affinity-in-memory-map.md) | Session affinity via in-memory sticky map, not Redis | Accepted | M1 |
 | [0002](0002-hand-rolled-bpe-over-crate.md) | Hand-rolled BPE tokenizer over the `tokenizers` crate | Accepted | M-Tok |
 | [0003](0003-rust-tokenizer-as-grpc-service.md) | Rust tokenizer as a separate gRPC service, not an FFI binding | Accepted | M-Tok |

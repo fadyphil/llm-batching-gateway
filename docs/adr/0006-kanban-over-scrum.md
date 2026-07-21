@@ -15,7 +15,7 @@ Kanban board with a tight WIP limit (1 card "Doing," 2 only if genuinely blocked
 ## Alternatives Considered
 
 | Option | Why not chosen |
-|---|---|
+| --- | --- |
 | Full Scrum with timeboxed sprints | Sprint commitment, velocity tracking, and most ceremonies exist to synchronize *multiple people's* uncertainty against each other. Solo, there's no one to synchronize with — a "sprint fail" with no one to answer to is just discouraging, not informative. |
 | No process — pure ad hoc | Named risk: unstructured solo projects drift without a forcing function for "done," which is how portfolio repos end up abandoned mid-build. |
 

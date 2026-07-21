@@ -39,7 +39,7 @@ gitGraph
 `<type>/<short-kebab-case-description>` — type matches the commit-type table in `CONTRIBUTING.md §4`:
 
 | Prefix | Use |
-|---|---|
+| --- | --- |
 | `feature/` | New capability, matches a Feature/Task card |
 | `fix/` | Bug fix, matches a Bug Report card |
 | `refactor/` | Restructuring, no behavior change |

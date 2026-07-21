@@ -15,7 +15,7 @@ The actual decision, stated in one or two sentences, unhedged. Not "we could con
 ## Alternatives Considered
 
 | Option | Why not chosen |
-|---|---|
+| --- | --- |
 | <Alternative A> | <Concrete reason — cost, complexity, scope fit, not just "worse"> |
 | <Alternative B> | |
 

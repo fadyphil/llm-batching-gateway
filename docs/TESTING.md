@@ -5,7 +5,7 @@ The Iron Law and the red-green-refactor cycle are defined in `CONTRIBUTING.md §
 ## 1. Test Pyramid
 
 | Layer | Scope | Tooling |
-|---|---|---|
+| --- | --- | --- | --- |
 | Unit | Pure functions, single struct/module in isolation — no live network, process, or filesystem | Go: `testing` + `testify/assert`. Rust: built-in `#[test]`. Dart: `flutter_test` + `bloc_test` for BLoC state transitions |
 | Integration | A real service boundary (e.g., Scheduler ↔ a real Tokenizer instance over gRPC on localhost) | Go: `testing` with a real `tonic` process spun up in `TestMain`; no mocked gRPC clients for these |
 | Property-based | Invariants that must hold across the input space, not just example inputs — see §2 | Go: `pgregory.net/rapid` |
@@ -20,7 +20,7 @@ Example-based tests answer "does this specific case work?" Property-based tests 
 Properties to encode as generators + invariant checks, not hand-written examples:
 
 | Property | What it catches |
-|---|---|
+| --- | --- |
 | A dispatched batch never exceeds `maxSize` | Off-by-one or race in the size-trigger check |
 | A request is never held past `window + dispatch latency` without being dispatched | Timer logic bugs, especially around batch-key creation races |
 | No request is silently dropped under concurrent enqueue (every enqueued `request_id` eventually appears in exactly one dispatched batch) | Channel/goroutine handoff bugs — the class of bug that's invisible in single-threaded example tests |
@@ -36,7 +36,7 @@ Load generation: `ghz` against the Gateway's `Complete` RPC, varying concurrent 
 Chaos scenarios, each with an expected, testable outcome:
 
 | Scenario | Expected outcome |
-|---|---|
+| --- | --- |
 | Kill a Worker process mid-batch | In-flight requests requeue to a healthy Worker and complete — `docs/adr/0004` |
 | Saturate the ingress channel | New requests receive `RESOURCE_EXHAUSTED` immediately, no hang, no memory growth |
 | Burst concurrent sessions against a single sticky Worker | Session affinity holds; Worker doesn't silently drop excess load — degrades via backpressure instead |

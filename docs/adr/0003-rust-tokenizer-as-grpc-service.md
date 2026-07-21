@@ -15,7 +15,7 @@ A standalone `tonic`-based gRPC service, called over localhost from the Schedule
 ## Alternatives Considered
 
 | Option | Why not chosen |
-|---|---|
+| --- | --- |
 | FFI/cgo binding into the Go process | Faster (no serialization or network hop) and simpler to deploy as one binary, but couples the Go and Rust build toolchains, complicates cross-compilation, and — most importantly for this project's actual purpose — collapses "design a polyglot service boundary" into an in-process function call. That's a materially weaker thing to demonstrate; the whole point of the sidecar is proving a real cross-language service contract, not just cross-language code reuse. |
 | Rewrite the tokenizer in Go | Removes the integration question entirely, but eliminates the Rust proof point altogether. |
 

@@ -15,7 +15,7 @@ GitHub Flow: `main` is always demoable, protected, and every change lands via a 
 ## Alternatives Considered
 
 | Option | Why not chosen |
-|---|---|
+| --- | --- |
 | GitFlow | Solves a coordination problem — buffering unstable in-progress work from a scheduled release — that doesn't exist with one committer. The extra branch types are pure overhead here. |
 | Full trunk-based development with feature flags | Feature flags exist to let multiple engineers commit incomplete work to `main` simultaneously without blocking each other. Solo, the equivalent is simpler: just don't merge until it's ready. Flag infrastructure would be unused complexity. |
 

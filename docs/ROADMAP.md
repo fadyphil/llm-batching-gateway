@@ -11,8 +11,8 @@ The infrastructure is the project, not the model — see `docs/PRD.md §1`.
 ## Status
 
 | Milestone | Tier | Status | Tag |
-|---|---|---|---|
-| M0 — Foundation | Must | ⏳ Planned | — |
+| --- | --- | --- | --- |
+| M0 — Foundation | Must | ✅ Complete | `v0.1.0-M0` |
 | M1 — Core Scheduler | Must | ⏳ Planned | — |
 | M-Tok — Rust Tokenizer Sidecar | Must | ⏳ Planned | — |
 | M-UI — Flutter Playground | Must | ⏳ Planned | — |

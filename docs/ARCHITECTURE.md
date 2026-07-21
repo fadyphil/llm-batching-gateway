@@ -31,16 +31,16 @@ sequenceDiagram
     participant TOK as Tokenizer
     participant S as Scheduler
     participant W as Worker
-    C->>GW: Complete(CompletionRequest)
+    C->>GW: Complete(CompleteRequest)
     GW->>S: Enqueue(EnqueueRequest)
     S->>TOK: CountTokens(prompt)
     TOK-->>S: token_count, exceeds_budget
     Note over S: Assign to openBatch by (model, priority)<br/>key. Dispatch on max-size OR window expiry.
-    S->>W: RunBatch(BatchDispatch)
+    S->>W: RunBatch(RunBatchRequest)
     loop per token
-        W-->>S: WorkerChunk(request_id, token)
-        S-->>GW: CompletionChunk (demuxed by request_id)
-        GW-->>C: CompletionChunk
+        W-->>S: RunBatchResponse(request_id, token)
+        S-->>GW: EnqueueResponse (demuxed by request_id)
+        GW-->>C: CompleteResponse
     end
 ```
 

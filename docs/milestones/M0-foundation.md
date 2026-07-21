@@ -1,6 +1,6 @@
 # M0 — Foundation
 
-**Status:** Not started
+**Status:** ✅ Complete
 **Depends on:** Nothing — this is the first milestone
 **Unlocks:** M1, M-Tok, M-UI (see `docs/PRD.md §6`)
 

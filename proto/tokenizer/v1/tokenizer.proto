@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package tokenizer.v1;
+
+option go_package = "github.com/fadyphil/llm-batching-gateway/proto/go/tokenizer/v1";
+
+// TokenizerService is the internal API from Scheduler to the Rust tokenizer sidecar.
+// CountTokens is synchronous and on the enqueue hot path.
+service TokenizerService {
+  rpc CountTokens(CountTokensRequest) returns (CountTokensResponse);
+}
+
+message CountTokensRequest {
+  string prompt = 1;
+  string model = 2;
+  int32 max_tokens = 3;
+}
+
+message CountTokensResponse {
+  int32 token_count = 1;
+  bool exceeds_budget = 2;
+  int32 suggested_truncation = 3;
+}

@@ -3,10 +3,12 @@ package worker
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 
 	"google.golang.org/grpc"
 
@@ -37,22 +39,55 @@ type completionChunk struct {
 }
 
 func (s *Server) RunBatch(req *wv1.RunBatchRequest, stream grpc.ServerStreamingServer[wv1.RunBatchResponse]) error {
+	ctx, cancel := context.WithCancel(stream.Context())
+	defer cancel()
+
+	var wg sync.WaitGroup
+	demux := make(chan *wv1.RunBatchResponse)
+	errCh := make(chan error, len(req.Items))
+
 	for _, item := range req.Items {
-		if err := s.runSingle(item, stream); err != nil {
-			return fmt.Errorf("item %s: %w", item.RequestId, err)
-		}
+		item := item
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			if err := s.runItem(ctx, item, demux); err != nil {
+				errCh <- err
+			}
+		}()
 	}
-	return nil
+
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		for resp := range demux {
+			if err := stream.Send(resp); err != nil {
+				cancel()
+				return
+			}
+		}
+	}()
+
+	wg.Wait()
+	close(demux)
+	<-done
+
+	select {
+	case err := <-errCh:
+		return err
+	default:
+		return nil
+	}
 }
 
-func (s *Server) runSingle(item *wv1.BatchItem, stream grpc.ServerStreamingServer[wv1.RunBatchResponse]) error {
+func (s *Server) runItem(ctx context.Context, item *wv1.BatchItem, demux chan<- *wv1.RunBatchResponse) error {
 	body := &completionRequest{Prompt: item.Prompt, Stream: true}
 	data, err := json.Marshal(body)
 	if err != nil {
-		return fmt.Errorf("marshal request: %w", err)
+		return fmt.Errorf("marshal: %w", err)
 	}
 
-	httpReq, err := http.NewRequestWithContext(stream.Context(), http.MethodPost, s.llamaURL+"/completion", bytes.NewReader(data))
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, s.llamaURL+"/completion", bytes.NewReader(data))
 	if err != nil {
 		return fmt.Errorf("create request: %w", err)
 	}
@@ -78,15 +113,17 @@ func (s *Server) runSingle(item *wv1.BatchItem, stream grpc.ServerStreamingServe
 
 		var chunk completionChunk
 		if err := json.Unmarshal([]byte(payload), &chunk); err != nil {
-			return fmt.Errorf("parse SSE chunk: %w", err)
+			return fmt.Errorf("parse SSE: %w", err)
 		}
 
-		if err := stream.Send(&wv1.RunBatchResponse{
+		select {
+		case demux <- &wv1.RunBatchResponse{
 			RequestId: item.RequestId,
 			Token:     chunk.Content,
 			IsFinal:   chunk.Stop,
-		}); err != nil {
-			return fmt.Errorf("send token: %w", err)
+		}:
+		case <-ctx.Done():
+			return ctx.Err()
 		}
 
 		if chunk.Stop {

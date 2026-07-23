@@ -10,3 +10,11 @@ type EnqueueRequest struct {
 	Priority   commonv1.Priority
 	TokenCount int32
 }
+
+type EnqueueResponse struct {
+	RequestId    string
+	Token        string
+	IsFinal      bool
+	FinishReason commonv1.FinishReason
+	Error        string
+}

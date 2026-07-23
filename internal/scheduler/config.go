@@ -29,8 +29,8 @@ func (r *realTimer) Stop() bool          { return r.t.Stop() }
 
 type RealTimeSource struct{}
 
-func (RealTimeSource) Now() time.Time                        { return time.Now() }
-func (RealTimeSource) NewTimer(d time.Duration) Timer        { return &realTimer{t: time.NewTimer(d)} }
+func (RealTimeSource) Now() time.Time                 { return time.Now() }
+func (RealTimeSource) NewTimer(d time.Duration) Timer { return &realTimer{t: time.NewTimer(d)} }
 
 type FakeTimeSource struct {
 	now    time.Time

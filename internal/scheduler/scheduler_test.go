@@ -12,7 +12,6 @@ import (
 )
 
 type mockStream struct {
-	t      *testing.T
 	chunks []*sv1.EnqueueResponse
 }
 
@@ -22,7 +21,7 @@ func (m *mockStream) Send(resp *sv1.EnqueueResponse) error {
 }
 
 func TestEnqueue_BasicRequest_StreamsTokens(t *testing.T) {
-	tokenCh := make(chan *wv1.RunBatchResponse, 2)
+	tokenCh := make(chan *wv1.RunBatchResponse, 3)
 	tokenCh <- &wv1.RunBatchResponse{RequestId: "req-1", Token: "hel", IsFinal: false}
 	tokenCh <- &wv1.RunBatchResponse{RequestId: "req-1", Token: "lo", IsFinal: false}
 	tokenCh <- &wv1.RunBatchResponse{RequestId: "req-1", Token: "", IsFinal: true}
@@ -42,7 +41,7 @@ func TestEnqueue_BasicRequest_StreamsTokens(t *testing.T) {
 	defer cancel()
 	go s.Run(ctx)
 
-	stream := &mockStream{t: t}
+	stream := &mockStream{}
 	err := s.Enqueue(&sv1.EnqueueRequest{RequestId: "req-1"}, stream)
 	if err != nil {
 		t.Fatalf("Enqueue returned error: %v", err)
@@ -69,7 +68,7 @@ func TestEnqueue_ChannelFull_ReturnsResourceExhausted(t *testing.T) {
 
 	enqueued := make(chan struct{})
 	go func() {
-		_ = s.Enqueue(&sv1.EnqueueRequest{RequestId: "req-1"}, &mockStream{t: t})
+		_ = s.Enqueue(&sv1.EnqueueRequest{RequestId: "req-1"}, &mockStream{})
 		close(enqueued)
 	}()
 
@@ -79,7 +78,7 @@ func TestEnqueue_ChannelFull_ReturnsResourceExhausted(t *testing.T) {
 	case <-time.After(10 * time.Millisecond):
 	}
 
-	err := s.Enqueue(&sv1.EnqueueRequest{RequestId: "req-2"}, &mockStream{t: t})
+	err := s.Enqueue(&sv1.EnqueueRequest{RequestId: "req-2"}, &mockStream{})
 	if err == nil {
 		t.Fatal("expected RESOURCE_EXHAUSTED error, got nil")
 	}

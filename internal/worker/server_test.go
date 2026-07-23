@@ -2,7 +2,9 @@ package worker_test
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -135,11 +137,24 @@ func TestWorker_ConcurrentExecution_FasterThanSequential(t *testing.T) {
 	}
 }
 
+type testCompletionRequest struct {
+	Prompt string `json:"prompt"`
+}
+
 func TestWorker_PartialHTTPFailure_OtherStreamsContinue(t *testing.T) {
-	var requestCount int
 	llama := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		requestCount++
-		if requestCount == 1 {
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		var req testCompletionRequest
+		if err := json.Unmarshal(body, &req); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		if req.Prompt == "fail-me" {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package gateway.v1;
+
+option go_package = "github.com/fadyphil/llm-batching-gateway/proto/go/gateway/v1";
+
+import "common/v1/common.proto";
+
+// CompletionService is the client-facing streaming completion API.
+// Returns UNAUTHENTICATED if the static auth token is missing or invalid.
+service CompletionService {
+  rpc Complete(CompleteRequest) returns (stream CompleteResponse);
+}
+
+message CompleteRequest {
+  string session_id = 1;
+  string prompt = 2;
+  string model = 3;
+  common.v1.Priority priority = 4;
+}
+
+message CompleteResponse {
+  string request_id = 1;
+  string token = 2;
+  bool is_final = 3;
+  string finish_reason = 4;
+}

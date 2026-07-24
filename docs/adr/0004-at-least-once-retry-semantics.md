@@ -15,7 +15,7 @@ At-least-once: on Worker failure, in-flight requests are requeued to a healthy W
 ## Alternatives Considered
 
 | Option | Why not chosen |
-|---|---|
+| --- | --- |
 | Exactly-once via a durable dedup log / distributed transaction | Real engineering cost — durable state, idempotency keys, likely an external store — disproportionate to what a single-process portfolio scheduler needs to prove. Explicitly named as out of scope, `docs/PRD.md §5`. |
 | Best-effort / drop in-flight requests on Worker failure | Silent data loss is a strictly worse failure mode than a visible stream restart — it violates the Debuggability and Traceability pillars in `CODE_STYLE.md §1`: a dropped request with no trace is undiagnosable, a restarted stream is a visible, testable, explainable behavior. |
 

@@ -4,13 +4,14 @@
 
 <!-- badges: TBD once CI exists — build status, license -->
 
-**Status:** Pre-implementation — see [`docs/ROADMAP.md`](docs/ROADMAP.md) for current milestone progress.
+**Status:** M0 walking skeleton complete — see [`docs/ROADMAP.md`](docs/ROADMAP.md) for current milestone progress.
 
 <!-- demo gif / video link: TBD once M-UI + M1 land -->
 
 ## What This Is
 
 A gRPC-based inference gateway in Go, fronting a local `llama.cpp` backend, with:
+
 - A batching Scheduler that groups concurrent requests by model and priority, with provable correctness properties (`docs/TESTING.md §2`)
 - A hand-rolled BPE tokenizer as an independent Rust service, not a library call (`docs/adr/0002`, `docs/adr/0003`)
 - Session-affinity routing, backpressure, and at-least-once failure recovery — all demonstrated, not just claimed (`docs/adr/0001`, `docs/adr/0004`)
@@ -19,7 +20,7 @@ A gRPC-based inference gateway in Go, fronting a local `llama.cpp` backend, with
 ## Documentation
 
 | Doc | What's in it |
-|---|---|
+| --- | --- |
 | [`docs/PRD.md`](docs/PRD.md) | Requirements, MVP scope, functional/non-functional requirements, what's explicitly out of scope |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | System design, request lifecycle, the Scheduler's internals, and why each major piece is shaped the way it is |
 | [`docs/SCHEMA.md`](docs/SCHEMA.md) | Every data shape — wire contracts and internal state — as pure reference |

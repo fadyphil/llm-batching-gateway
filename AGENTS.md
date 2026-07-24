@@ -4,9 +4,10 @@ Guidance for AI agents (OpenCode / Claude / Copilot) working in this repo. Read 
 
 ## Repo State
 
-**Pre-implementation, docs-only.** No source, no `go.mod`/`Cargo.toml`/`pubspec.yaml`, no CI workflows, no `opencode.json`, no.lockfiles. Current milestone: M0 (not started). `docs/` *is* the project — treat it as the source of truth, not README prose. Code laid down in M0 must match the contracts in `docs/SCHEMA.md` and the boundaries in `docs/ARCHITECTURE.md`.
+**M0 walking skeleton complete.** Go source exists (`go.mod`, `go.sum`), proto files defined and lint-clean, three Go services scaffolded (Gateway, Scheduler, Worker) with TDD tests. No CI workflows yet, no Rust/Flutter code, no `opencode.json`. `docs/` remains the source of truth — code contracts must match `docs/SCHEMA.md` and architecture boundaries in `docs/ARCHITECTURE.md`, updated in this same milestone.
 
 When you find yourself about to write code, **read in this order first**:
+
 1. `CONTRIBUTING.md` (binding ground rules — same standard for AI and humans)
 2. `CODE_STYLE.md` (enforced per-language style + the four pillars)
 3. `docs/TESTING.md` (TDD workflow + the property-test mandate for the Scheduler)
@@ -48,7 +49,7 @@ No single project-wide test runner — each language owns its own. There is no `
 
 ## Architecture Boundaries That Aren't Obvious From Filenames
 
-- **Monorepo** (`docs/adr/0007`): one shared `/proto` dir is the source of truth for every wire contract. A proto change is one atomic commit across all consumers — never edit a proto in isolation assuming consumers will catch up.
+- **Monorepo** (`docs/adr/0007`): one shared `/proto` dir is the source of truth for every wire contract. Proto files live under `proto/<package>/v1/<package>.proto` (buf-lint enforced layout). Generated Go code lands in `proto/go/<package>/v1/`. A proto change is one atomic commit across all consumers — never edit a proto in isolation assuming consumers will catch up.
 - **Go services live under `internal/<service>/`** and **never import another service's `internal/`** — they talk over the proto-defined gRPC boundary, same as over the network. Treat the process boundary as the module boundary.
 - **Interfaces are defined at the consumer, not the implementer** (`CODE_STYLE.md §2`): `WorkerDispatcher`, `TokenCounter`, etc. — small and behavior-named. Don't ship a 12-method `SchedulerDependencies`.
 - **Rust tokenizer is a separate `tonic` gRPC service, not an FFI/cgo binding** (`docs/adr/0003`). The BPE core (merge rules, vocab lookup) is pure functions, kept separate from the `tonic` wrapper so it's testable with zero gRPC. Hand-rolled, not the `tokenizers` crate (`docs/adr/0002`).

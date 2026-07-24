@@ -13,7 +13,7 @@
 ## Results
 
 | Metric | Target (`docs/PRD.md §4`) | Measured | Notes |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Dispatch decision latency (interactive priority) | Within configured window | *TBD* | |
 | Max sustained concurrent streams without request loss | *TBD — hardware-bound, this run finds the real ceiling* | *TBD* | |
 | Batch size distribution under load | N/A — descriptive | *TBD* | Direct evidence for the batching thesis, `docs/ARCHITECTURE.md §9` |

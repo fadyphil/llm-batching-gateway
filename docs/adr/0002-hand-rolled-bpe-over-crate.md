@@ -15,7 +15,7 @@ Hand-roll BPE encode/decode against a bundled public vocab/merges file, rather t
 ## Alternatives Considered
 
 | Option | Why not chosen |
-|---|---|
+| --- | --- |
 | Wrap the `tokenizers` crate | Ships faster and is production-battle-tested, but reduces this milestone to "I called a library" — a materially weaker answer to "walk me through something you built from first principles" than implementing BPE encode/decode directly, which is consistent with this project's existing from-scratch precedent (a prior Rust project implementing Git internals). |
 | Implement tokenization in Go instead of a separate Rust service | Removes the cross-language boundary entirely, which undercuts the actual reason the sidecar exists — see `docs/adr/0003`. |
 

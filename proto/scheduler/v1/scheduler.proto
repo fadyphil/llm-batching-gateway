@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package scheduler.v1;
+
+option go_package = "github.com/fadyphil/llm-batching-gateway/proto/go/scheduler/v1";
+
+import "common/v1/common.proto";
+
+// SchedulerService is the internal API from Gateway to Scheduler.
+// Enqueue blocks until the request is assigned to a batch and dispatched;
+// the stream carries that request's tokens once the batch runs.
+// Returns RESOURCE_EXHAUSTED when the ingress channel is saturated.
+service SchedulerService {
+  rpc Enqueue(EnqueueRequest) returns (stream EnqueueResponse);
+}
+
+message EnqueueRequest {
+  string request_id = 1;
+  string session_id = 2;
+  string prompt = 3;
+  string model = 4;
+  common.v1.Priority priority = 5;
+  int32 token_count = 6;
+}
+
+message EnqueueResponse {
+  string request_id = 1;
+  string token = 2;
+  bool is_final = 3;
+  string finish_reason = 4;
+}

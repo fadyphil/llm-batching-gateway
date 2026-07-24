@@ -15,7 +15,7 @@ An in-memory map inside the Scheduler process: `sessionID -> (workerID, lastActi
 ## Alternatives Considered
 
 | Option | Why not chosen |
-|---|---|
+| --- | --- |
 | External store (Redis) | Adds a network hop and an operational dependency for a problem that only matters once the Scheduler itself is horizontally scaled — which is explicitly out of scope (`docs/PRD.md §5`). Solving for a scaling scenario that doesn't exist yet is premature. |
 | No session affinity — pure round-robin | Simpler, but drops both the conversational-consistency property and the interview-relevant demonstration of a real scheduling concern; not a meaningful cost saving given the in-memory map is cheap. |
 

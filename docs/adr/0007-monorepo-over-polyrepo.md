@@ -15,7 +15,7 @@ Single monorepo, one shared `/proto` directory as the source of truth for every 
 ## Alternatives Considered
 
 | Option | Why not chosen |
-|---|---|
+| --- | --- |
 | Polyrepo, one repo per service | Has real signal value — demonstrates managing cross-repo dependencies and versioned contract publishing — but for a single developer, a proto change becomes a manually coordinated multi-repo version bump on every touch, which is daily friction with no corresponding coordination benefit, since there's no second team the repo boundary is protecting anyone from. |
 
 ## Consequences

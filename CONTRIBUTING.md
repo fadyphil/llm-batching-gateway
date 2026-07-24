@@ -27,7 +27,7 @@ This project is built with heavy AI assistance by design, and that assistance is
 - **Human review and merge authority is retained regardless of how a change was produced.** No PR self-merges without the repo owner's explicit review, including PRs opened by an agent operating autonomously.
 - **Attribution:** commits authored substantially by an AI agent should carry a trailer —
 
-  ```
+  ```text
   Co-Authored-By: Claude <noreply@anthropic.com>
   ```
 
@@ -43,7 +43,7 @@ This project is built with heavy AI assistance by design, and that assistance is
 
 ## 4. Commit Messages — Conventional Commits
 
-```
+```text
 <type>(<scope>): <subject>
 
 [optional body — explain why, not what]
@@ -54,7 +54,7 @@ This project is built with heavy AI assistance by design, and that assistance is
 **Types:**
 
 | Type | Use for |
-|---|---|
+| --- | --- |
 | `feat` | New capability |
 | `fix` | Bug fix |
 | `docs` | Documentation only |
@@ -68,7 +68,7 @@ This project is built with heavy AI assistance by design, and that assistance is
 
 **Scopes** — match a service or doc area: `gateway`, `auth`, `scheduler`, `worker`, `registry`, `tokenizer`, `observability`, `flutter`, `nginx`, `proto`, `docs`.
 
-```
+```text
 feat(scheduler): implement dual-trigger batch dispatch
 
 Batches now close on max-size OR window-expiry, whichever hits first.

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package common.v1;
+
+option go_package = "github.com/fadyphil/llm-batching-gateway/proto/go/common/v1";
+
+// Priority tiers for request isolation.
+// INTERACTIVE and BACKGROUND never share a batch key.
+enum Priority {
+  PRIORITY_UNSPECIFIED = 0;
+  PRIORITY_INTERACTIVE = 1;
+  PRIORITY_BACKGROUND = 2;
+}
+
+// CompletionChunk is a single token in a streaming completion response.
+message CompletionChunk {
+  string request_id = 1;
+  string token = 2;
+  bool is_final = 3;
+  string finish_reason = 4;
+}

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package worker.v1;
+
+option go_package = "github.com/fadyphil/llm-batching-gateway/proto/go/worker/v1";
+
+// WorkerService is the internal API from Scheduler to Worker.
+// RunBatch dispatches a batch of items to a single llama-server instance.
+// The response stream carries interleaved tokens for all items, demuxed by request_id.
+service WorkerService {
+  rpc RunBatch(RunBatchRequest) returns (stream RunBatchResponse);
+}
+
+message RunBatchRequest {
+  string batch_id = 1;
+  repeated BatchItem items = 2;
+}
+
+message BatchItem {
+  string request_id = 1;
+  string prompt = 2;
+}
+
+message RunBatchResponse {
+  string request_id = 1;
+  string token = 2;
+  bool is_final = 3;
+}
